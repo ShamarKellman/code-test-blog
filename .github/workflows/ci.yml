@@ -34,4 +34,4 @@ jobs:
         run: composer test
 
       - name: Run Code Style Check
-          run: composer check
+        run: composer check
