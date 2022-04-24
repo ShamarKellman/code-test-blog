@@ -8,7 +8,7 @@
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.2",
-        "laravel/sanctum": "^2.14.1",
+        "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.7"
     },
     "require-dev": {
@@ -16,8 +16,11 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "symplify/easy-coding-standard": "^10.2"
     },
     "autoload": {
         "psr-4": {
@@ -32,6 +35,9 @@
         }
     },
     "scripts": {
+        "test" : "vendor/bin/pest",
+        "check": "vendor/bin/ecs check",
+        "fix": "vendor/bin/ecs check --fix",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -54,7 +60,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
