@@ -41,21 +41,6 @@ class NewPostCreatedNotification extends Notification implements ShouldQueue
      *
      * @return array<string, mixed>
      */
-    public function toDatabase(mixed $notifiable): array
-    {
-        return [
-            'id' => $this->post->id,
-            'title' => $this->post->title,
-            'author' => $this->post->author->username,
-            'created_at' => $this->post->created_at,
-        ];
-    }
-
-    /**
-     * @param mixed $notifiable
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(mixed $notifiable): array
     {
         return [
