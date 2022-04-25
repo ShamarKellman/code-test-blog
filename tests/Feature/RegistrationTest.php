@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 test('new users can register')
-    ->post('/api/register', [
+    ->post('/api/v1/register', [
         'name' => 'Test User',
         'username' => 'testuser',
         'email' => 'test@example.com',

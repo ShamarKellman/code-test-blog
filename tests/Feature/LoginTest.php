@@ -7,7 +7,7 @@ use App\Models\User;
 test('users can login', function () {
     $user = User::factory()->create();
 
-    $this->post('/api/login', [
+    $this->postJson('/api/v1/login', [
         'email' => $user->email,
         'password' => 'password',
     ])
@@ -20,7 +20,7 @@ test('users can login', function () {
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/api/login', [
+    $this->postJson('/api/v1/login', [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);

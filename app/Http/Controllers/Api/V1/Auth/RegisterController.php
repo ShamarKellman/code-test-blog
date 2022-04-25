@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -21,7 +22,6 @@ class RegisterController extends Controller
         ]);
 
         event(new Registered($user));
-
 
         return response()->json([
             'token' => $user->createToken('auth_token')->plainTextToken,

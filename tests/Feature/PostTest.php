@@ -2,20 +2,25 @@
 
 declare(strict_types=1);
 
+use App\Events\NewPostCreatedEvent;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\NewPostCreatedNotification;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 test('user can create post', function () {
+    Event::fake(NewPostCreatedEvent::class);
     Storage::fake('local');
 
     $user = User::factory()->create();
     $file = UploadedFile::fake()->image('test.jpg');
 
     $this->actingAs($user)
-         ->postJson('/api/posts', [
+         ->postJson('/api/v1/posts', [
              'title' => 'Test Post',
              'description' => 'This is a description',
              'image' => $file,
@@ -30,6 +35,8 @@ test('user can create post', function () {
     ]);
 
     Storage::assertExists(Post::first()->image);
+
+    Event::assertDispatched(NewPostCreatedEvent::class);
 });
 
 test('user cannot create post if not authenticated', function () {
@@ -37,7 +44,7 @@ test('user cannot create post if not authenticated', function () {
 
     $file = UploadedFile::fake()->image('test.jpg');
 
-    $this->postJson('/api/posts', [
+    $this->postJson('/api/v1/posts', [
         'title' => 'Test Post',
         'description' => 'This is a description',
         'image' => $file,
@@ -52,7 +59,7 @@ test('user can view all post', function () {
         ->count(3)
         ->create();
 
-    $this->getJson('/api/posts')
+    $this->getJson('/api/v1/posts')
          ->assertStatus(200)
          ->assertJsonCount(3, 'data');
 });
@@ -63,7 +70,7 @@ test('user can view by id', function () {
                 ->hasLikes(6)
                 ->create();
 
-    $this->getJson("/api/posts/{$post->id}")
+    $this->getJson("/api/v1/posts/{$post->id}")
          ->assertStatus(200)
          ->assertJsonPath('data.id', $post->id)
          ->assertJsonPath('data.title', $post->title);
@@ -74,7 +81,7 @@ test('user can like a post', function () {
     $post = Post::factory()->create();
 
     $response = $this->actingAs($user)
-                     ->postJson("/api/posts/{$post->id}/like")
+                     ->postJson("/api/v1/posts/{$post->id}/like")
                      ->assertOk();
 
     $this->assertDatabaseHas('likes', [
@@ -87,7 +94,7 @@ test('user can unlike a post', function () {
     $like = Like::factory()->create();
 
     $this->actingAs($like->user)
-         ->postJson("/api/posts/{$like->post_id}/unlike")
+         ->postJson("/api/v1/posts/{$like->post_id}/unlike")
          ->assertNoContent();
 
     $this->assertDatabaseCount('likes', 0);
@@ -105,7 +112,7 @@ test('user can remove a post', function () {
     $post = Post::factory()->set('image', '/images/test.jpg')->create();
 
     $this->actingAs($post->author)
-         ->deleteJson("/api/posts/{$post->id}")
+         ->deleteJson("/api/v1/posts/{$post->id}")
          ->assertNoContent();
 
     $this->assertDatabaseCount('posts', 0);
@@ -127,7 +134,7 @@ test('user cannot remove a post if they do not own the post', function () {
     $post = Post::factory()->set('image', '/images/test.jpg')->create();
 
     $this->actingAs($user)
-         ->deleteJson("/api/posts/{$post->id}")
+         ->deleteJson("/api/v1/posts/{$post->id}")
          ->assertUnauthorized();
 });
 
@@ -144,4 +151,17 @@ test('can remove post after 15 days', function () {
     $this->artisan('model:prune');
 
     $this->assertDatabaseCount('posts', 0);
+});
+
+
+test('sends notification to all users when post is created', function () {
+    Notification::fake();
+
+    $users = User::factory()->count(3)->create();
+
+    $post = Post::factory()->create();
+
+    event(new NewPostCreatedEvent($post->id));
+
+    Notification::assertSentTo($users, NewPostCreatedNotification::class);
 });

@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Events\NewPostCreatedEvent;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
@@ -61,6 +63,8 @@ class PostController extends Controller
             ->create(array_merge($request->validated(), [
                 'image' => $path,
             ]));
+
+        event(new NewPostCreatedEvent($post->id));
 
         return PostResource::make($post);
     }
