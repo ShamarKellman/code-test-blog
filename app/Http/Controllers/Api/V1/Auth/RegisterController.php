@@ -8,11 +8,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    public function store(RegisterRequest $request)
+    /**
+     * @param  RegisterRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(RegisterRequest $request): JsonResponse
     {
         $user = User::create([
             'name' => $request->name,

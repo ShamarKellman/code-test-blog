@@ -7,10 +7,16 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
-    public function store(LoginRequest $request)
+    /**
+     * @param  LoginRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
 

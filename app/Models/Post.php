@@ -55,7 +55,7 @@ class Post extends Model
     }
 
     /**
-     * @return Builder
+     * @return Builder<Post>
      */
     public function prunable(): Builder
     {
