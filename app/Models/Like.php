@@ -18,7 +18,7 @@ class Like extends Model
     public $incrementing = false;
 
     /**
-     * @var string<int, string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'post_id',
@@ -26,7 +26,7 @@ class Like extends Model
     ];
 
     /**
-     * @return BelongsTo<Post>
+     * @return BelongsTo<Post, Like>
      */
     public function post(): BelongsTo
     {
@@ -34,7 +34,7 @@ class Like extends Model
     }
 
     /**
-     * @return BelongsTo<User>
+     * @return BelongsTo<User, Like>
      */
     public function user(): BelongsTo
     {

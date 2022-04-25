@@ -27,21 +27,21 @@ class NewPostCreatedNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * @param $notifiable
+     * @param mixed $notifiable
      *
      * @return array<int, string>
      */
-    public function via($notifiable): array
+    public function via(mixed $notifiable): array
     {
         return ['database'];
     }
 
     /**
-     * @param $notifiable
+     * @param mixed $notifiable
      *
      * @return array<string, mixed>
      */
-    public function toDatabase($notifiable): array
+    public function toDatabase(mixed $notifiable): array
     {
         return [
             'id' => $this->post->id,
@@ -52,11 +52,11 @@ class NewPostCreatedNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * @param $notifiable
+     * @param mixed $notifiable
      *
      * @return array<string, mixed>
      */
-    public function toArray($notifiable): array
+    public function toArray(mixed $notifiable): array
     {
         return [
             'id' => $this->post->id,

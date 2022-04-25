@@ -15,6 +15,7 @@ trait HasUuid
     protected static function bootHasUuid(): void
     {
         static::creating(static function (Model $model): void {
+            /** @phpstan-ignore-next-line  */
             $model->id = Str::uuid()->toString();
         });
     }

@@ -29,7 +29,7 @@ class Post extends Model
     protected $keyType = 'uuid';
 
     /**
-     * @var string<int, string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'title',
@@ -39,7 +39,7 @@ class Post extends Model
     ];
 
     /**
-     * @return BelongsTo<User>
+     * @return BelongsTo<User, Post>
      */
     public function author(): BelongsTo
     {

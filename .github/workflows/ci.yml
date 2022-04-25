@@ -35,3 +35,6 @@ jobs:
 
       - name: Run Code Style Check
         run: composer check
+
+      - name: Run Static Analysis
+        run: composer analyse
