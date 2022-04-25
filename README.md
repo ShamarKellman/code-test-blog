@@ -1,64 +1,101 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Blog Code Test
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repo provides a code test example in the form of a basic blog. 
 
-## About Laravel
+#### Requirements
+ - PHP 8.0+
+ - Mysql 8.0
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#### Installation
+``` shell
+git clone https://github.com/ShamarKellman/code-test-blog.git
+cd code-test-blog
+cp .env.example .env
+composer install
+php artisan key:generate
+php artisan migrate
+php artisan schedule:work
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Tables
+ - users
+   - id (biginteger)
+   - name (string)
+   - username (string)
+   - email (string)
+   - password (string)
+ - posts
+   - id (uuid)
+   - title (string)
+   - description (longtext)
+   - image (string)
+   - user_id (foreignId)
+ - likes
+   - user_id (foreignId)
+   - post_id (foreignUuid)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Models
+ - User
+ - Post
+ - Like
 
-## Learning Laravel
+#### Controllers
+ - Auth\LoginController
+ - Auth\RegisterController
+ - PostController
+ - LikeController
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Request
+ - LoginRequest
+ - RegisterRequest
+ - StorePostRequest
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Resources
+ - LikeResource
+ - PostResource
+ - UserResource
 
-## Laravel Sponsors
+#### Test
+ - Auth Test
+   - users can login
+   - users can not authenticate with invalid password
+   - new users can register
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+ - Posts Test
+   - user can create post
+   - user cannot create post if not authenticated
+   - user can view all post
+   - user can view by id
+   - user can like a post
+   - user can unlike a post
+   - user can remove a post
+   - user cannot remove a post if they do not own the post
+   - can remove post after 15 days
+   - sends notification to all users when post is created
 
-### Premium Partners
+#### Events
+ - NewPostCreatedEvent.php
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### Listeners
+ - SendNewPostCreatedEmailListener
 
-## Contributing
+#### Notifications
+ - NewPostCreatedNotification
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Routes
+ - (POST)       api/v1/login
+ - (GET)        api/v1/posts
+ - (POST)       api/v1/posts
+ - (GET)        api/v1/posts/{post}
+ - (DELETE)     api/v1/posts/{post}
+ - (POST)       api/v1/posts/{post}/like
+ - (POST)       api/v1/posts/{post}/unlike
+ - (POST)       api/v1/register
+ - (GET)        sanctum/csrf-cookie
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Notes
+ - `php artisan model:prune` is scheduled to run daily (see: app/Console/Kernel)  
+ - Uses Easy Coding Standard for PHPCS and PHPCS Fixer - `composer check` and `composer fix`
+ - Static Analysis using Larastan up to level 6 `composer analyse`
+ - Testing uses Pest `composer test`
+ - Uses GitHub Workflows (see .github/workflows folder)
